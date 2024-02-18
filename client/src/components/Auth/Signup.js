@@ -3,12 +3,20 @@ import { useState } from "react";
 const Signup = () =>{
 const [user,setUser] = useState({email:'',password:'',confirmPassword:''})
 const [error,setError] = useState('')
-    const handleSubmit = () =>{
-        if( (user.email && user.password && user.confirmPassword) && (user.password === user.confirmPassword)){
+
+const handleChange = (e) =>{
+    setError('')
+    setUser({...user,[e.target.name]:e.target.value})
+}
+
+    const handleSubmit = (e) =>{
+        e.preventDefault();
+        if( (user.email && user.password && user.confirmPassword) && (user.password.replace(/\s/g, "").length >= 6) && (user.password === user.confirmPassword)){
             // api call
+            console.log('user',user)
         }
         else{
-            setError('please fill all field')
+            setError('Invalid Details')
         }
     }
 
@@ -26,8 +34,8 @@ const [error,setError] = useState('')
             name="email"
             type="email"
             placeholder="Email"
-            // value={user.email}
-            // onChange={handleChange}
+            value={user.email}
+            onChange={handleChange}
             required
           />
         </div>
@@ -40,8 +48,8 @@ const [error,setError] = useState('')
             name="password"
             type="password"
             placeholder="Password"
-            // value={user.password}
-            // onChange={handleChange}
+            value={user.password}
+            onChange={handleChange}
             required
             
           />
@@ -55,8 +63,8 @@ const [error,setError] = useState('')
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
-            // value={user.confirmPassword}
-            // onChange={handleChange}
+            value={user.confirmPassword}
+            onChange={handleChange}
             required
           />
         </div> 
