@@ -3,17 +3,31 @@ import { useState } from "react";
 const Signup = () =>{
 const [user,setUser] = useState({email:'',password:'',confirmPassword:''})
 const [error,setError] = useState('')
-
+const URL = 'http://localhost:3007'
 const handleChange = (e) =>{
     setError('')
     setUser({...user,[e.target.name]:e.target.value})
 }
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
         if( (user.email && user.password && user.confirmPassword) && (user.password.replace(/\s/g, "").length >= 6) && (user.password === user.confirmPassword)){
-            // api call
-            console.log('user',user)
+            try{
+             let response = await fetch(`${URL}/user/signup`,{
+                method: 'POST',
+                body: JSON.stringify({email:user.email,password:user.password}),
+                headers: {'Content-Type':'application/json'}
+             })
+        
+                let data = await response.json()
+
+             if(response.ok){
+                alert(data.message)
+             }else
+             throw new Error(data.message)
+            }catch(err){
+              setError(err.message)
+            }
         }
         else{
             setError('Invalid Details')

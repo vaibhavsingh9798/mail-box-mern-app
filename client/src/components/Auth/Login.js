@@ -3,23 +3,40 @@ import { useState } from "react";
 const Login = () =>{
 const [user,setUser] = useState({email:'',password:''})
 const [error,setError] = useState('')
+const URL = 'http://localhost:3007'
 
 const handleChange = (e) =>{
     setError('')
     setUser({...user,[e.target.name]:e.target.value})
 }
 
-    const handleSubmit = (e) =>{
-        e.preventDefault();
-        if( (user.email && user.password) && (user.password.replace(/\s/g, "").length >= 6) ){
-            // api call
-            console.log('user',user)
-            setUser({email:'',password:''})
-        }
-        else{
-            setError('Invalid Details')
+const handleSubmit = async (e) =>{
+    e.preventDefault();
+    setError('');
+    if( (user.email && user.password) && (user.password.replace(/\s/g, "").length >= 6) ){
+        try{
+         let response = await fetch(`${URL}/user/login`,{
+            method: 'POST',
+            body: JSON.stringify({email:user.email,password:user.password}),
+            headers: {'Content-Type':'application/json'}
+         })
+    
+            let data = await response.json()
+
+         if(response.ok){
+            console.log('token',data.token)
+            localStorage.setItem('token',JSON.stringify(data.token))
+            alert(data.message)
+         }else
+         throw new Error(data.message)
+        }catch(err){
+          setError(err.message)
         }
     }
+    else{
+        setError('Invalid Details')
+    }
+}
 
     return(
         <div className="flex justify-center items-center h-screen bg-gradient-to-r from-red-500 to-pink-500 ">

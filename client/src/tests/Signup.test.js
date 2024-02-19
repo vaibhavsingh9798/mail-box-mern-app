@@ -1,7 +1,7 @@
 // Signup.test.js
 import React from 'react';
 import { render } from '@testing-library/react';
-import Signup from './Signup';
+import Signup from "../components/Auth/Signup";
 
 test('renders signup form correctly', () => {
 
@@ -10,7 +10,7 @@ test('renders signup form correctly', () => {
   // Check if form elements are rendered correctly
   const usernameInput = getByPlaceholderText('Email');
   const emailInput = getByPlaceholderText('Confirm Password');
-  
+
   const passwordInput = getByPlaceholderText('Password');
   const signupButton = getByText('Sign Up');
 
