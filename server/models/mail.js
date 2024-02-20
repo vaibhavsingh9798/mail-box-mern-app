@@ -15,6 +15,10 @@ const MailSchema = new mongoose.Schema({
     },
     text:{
         type:String,
+    },
+    read:{
+        type:Boolean,
+        default:false
     }
 })
 
