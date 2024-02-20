@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Signup = () =>{
 const [user,setUser] = useState({email:'',password:'',confirmPassword:''})
@@ -35,7 +36,7 @@ const handleChange = (e) =>{
     }
 
     return(
-        <div className="flex justify-center items-center h-screen bg-gradient-to-r from-red-500 to-pink-500 ">
+        <div className="flex justify-center items-center h-screen bg-gradient-to-r from-red-400 to-pink-400 ">
       <form className="bg-zinc-50 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 w-96" onSubmit={handleSubmit}>
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">SingUp</h2>
       
@@ -93,7 +94,7 @@ const handleChange = (e) =>{
         </div>
         <div className='mt-4'>
         
-        <p  className='text-slate-400'>Have an account? <button className="text-blue-500" >Log in </button></p>  
+        <p  className='text-slate-400'>Have an account? <NavLink to='/login'> <button className="text-blue-500" >Log in </button></NavLink></p>  
         {error && <p className='text-red-500 mt-2'>{error}</p>} 
         </div>
       </form>

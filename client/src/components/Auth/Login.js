@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Login = () =>{
 const [user,setUser] = useState({email:'',password:''})
@@ -39,7 +40,7 @@ const handleSubmit = async (e) =>{
 }
 
     return(
-        <div className="flex justify-center items-center h-screen bg-gradient-to-r from-red-500 to-pink-500 ">
+        <div className="flex justify-center items-center h-screen bg-gradient-to-r from-red-400 to-pink-400 ">
       <form className="bg-zinc-50 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 w-96" onSubmit={handleSubmit}>
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Login</h2>
       
@@ -76,7 +77,7 @@ const handleSubmit = async (e) =>{
         
         <div className="flex flex-col items-center justify-center">
           <button
-            className="bg-gradient-to-r from-red-500 to-pink-500  hover:font-extrabold text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+            className="bg-gradient-to-r from-red-400 to-pink-400  hover:font-extrabold text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
              Login
@@ -84,7 +85,7 @@ const handleSubmit = async (e) =>{
         </div>
         <div className='mt-4'>
         
-        <p  className='text-slate-400'>Don't have an account? <button className="text-blue-500" >Sign up</button></p>  
+        <p  className='text-slate-400'>Don't have an account? <NavLink to='/signup'><button className="text-blue-500" >Sign up</button></NavLink></p>  
         {error && <p className='text-red-500 mt-2'>{error}</p>} 
         </div>
       </form>

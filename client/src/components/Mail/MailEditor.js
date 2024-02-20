@@ -53,7 +53,7 @@ const MailEditor = () => {
 
   return (
     <div>
-        <div className='flex justify-between  bg-blue-100 p-2'>
+        <div className='flex justify-between  bg-blue-100 p-2 mt-4'>
             <div className='ml-2'>New Message</div>
             <div className='mr-2'>X</div>
         </div>
