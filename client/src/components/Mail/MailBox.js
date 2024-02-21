@@ -100,9 +100,7 @@ const MailBox = () =>{
           'Authorization':`Bearer ${token}`
       }
       })
-         let {data} = await response.json()
-         console.log('data',data)
-         
+         let {data} = await response.json()    
         if(data.length){
           setMails(data)
           let count = 0;
@@ -121,7 +119,11 @@ const MailBox = () =>{
      }
   }
   useEffect( ()=>{
-      fetchMail();
+      let intervalId = setInterval(()=>{
+        fetchMail();
+      },10000)
+
+      return () => { clearInterval(intervalId) }
   },[])
     return(
         <>
