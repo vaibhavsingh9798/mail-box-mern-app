@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Login = () =>{
 const [user,setUser] = useState({email:'',password:''})
 const [error,setError] = useState('')
 const URL = 'http://localhost:3007'
-
+const navigate = useNavigate()
 const handleChange = (e) =>{
     setError('')
     setUser({...user,[e.target.name]:e.target.value})
@@ -25,9 +25,9 @@ const handleSubmit = async (e) =>{
             let data = await response.json()
 
          if(response.ok){
-            console.log('token',data.token)
             localStorage.setItem('token',JSON.stringify(data.token))
             alert(data.message)
+            navigate('/')
          }else
          throw new Error(data.message)
         }catch(err){

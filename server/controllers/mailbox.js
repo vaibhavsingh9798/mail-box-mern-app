@@ -41,8 +41,18 @@ const deleteMail = async (req,res) =>{
      return res.status(500).json({message:'Server Error'})
     }
  }
+
+ const getSentbox = async (req,res) =>{
+    console.log('hit sent box',req.user)
+     try{
+        let response = await MailBox.find({sender:req.user})
+         res.status(200).json({data:response,message:'successfully fetch sentbox'})
+     }catch(err){
+         return res.status(500).json({message:'Server Error'})
+     }
+ }
  
 
 
 
-module.exports = {send,getInbox,updateMailRead,deleteMail}
+module.exports = {send,getInbox,updateMailRead,deleteMail,getSentbox}

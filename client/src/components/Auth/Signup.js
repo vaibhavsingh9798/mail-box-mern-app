@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const Signup = () =>{
 const [user,setUser] = useState({email:'',password:'',confirmPassword:''})
 const [error,setError] = useState('')
 const URL = 'http://localhost:3007'
+
+const navigate = useNavigate()
 const handleChange = (e) =>{
     setError('')
     setUser({...user,[e.target.name]:e.target.value})
@@ -24,6 +26,7 @@ const handleChange = (e) =>{
 
              if(response.ok){
                 alert(data.message)
+                navigate('/login')
              }else
              throw new Error(data.message)
             }catch(err){
