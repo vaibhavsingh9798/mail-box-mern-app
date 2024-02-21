@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import useDeleteMail from "../../hooks/useDeleteMail"
 
 const MailBox = () =>{
   const [mails,setMails] = useState([])
@@ -10,6 +11,7 @@ const MailBox = () =>{
   const [showSent,setShowSent] = useState(false)
   const [unreadMessage ,setUnreadMessage] = useState(0)
   const [showSentMessage,setShowSentMessage] = useState(false)
+  const [deleteResponse,deleteMail] = useDeleteMail()
 
   const URL = 'http://localhost:3007'
  
@@ -24,10 +26,6 @@ const MailBox = () =>{
 
   const handleMessage = async (e,mail) =>{
         e.preventDefault();
-      setShowMessage(true)
-      setShowSentMessage(false)
-      setShowSent(false)
-      setMessage(mail)
       try{
         let response = await fetch(`${URL}/mail/${mail._id}/markAsRead`,{
         method:'PUT',
@@ -38,6 +36,10 @@ const MailBox = () =>{
        })
         if(response.ok)
         fetchMail();
+        setShowMessage(true)
+      setShowSentMessage(false)
+      setShowSent(false)
+      setMessage(mail)
       }catch(err){
         console.log(err)
       }
@@ -51,22 +53,10 @@ const MailBox = () =>{
      setSentMesssage(mail)
     
   }
-  const deleteMail = async (e,mailId)=>{
+  const handleDelete = async (e,mailId)=>{
     e.preventDefault();
-      try{
-        let response = await fetch(`${URL}/mail/${mailId}/deleteMail`,{
-          method:'DELETE',
-          headers:{
-            'Content-Type':'application/json',
-            'Authorization':`Bearer ${token}`
-        }
-        })
-        console.log('del res',response)
-        if(response.ok)
-        fetchMail()
-      }catch(err){
-        alert('something wrong with delete')
-      }
+     await deleteMail(URL,token,mailId)
+       handleSent(e);
   }
 
   const handleSent = async (e) =>{
@@ -102,7 +92,6 @@ const MailBox = () =>{
       })
          let {data} = await response.json()    
         if(data.length){
-          setMails(data)
           let count = 0;
           for(let obj of data){
             if(!obj.read)
@@ -112,6 +101,7 @@ const MailBox = () =>{
           setUnreadMessage(99 +'+')
         else
         setUnreadMessage(count)
+        setMails(data)
         }
        
      }catch(err){
@@ -119,11 +109,13 @@ const MailBox = () =>{
      }
   }
   useEffect( ()=>{
-      let intervalId = setInterval(()=>{
-        fetchMail();
-      },10000)
+      // let intervalId = setInterval(()=>{
+      //   fetchMail();
+      // },10000)
 
-      return () => { clearInterval(intervalId) }
+      // return () => { clearInterval(intervalId) }
+
+      fetchMail();
   },[])
     return(
         <>
@@ -139,14 +131,14 @@ const MailBox = () =>{
                <div className=" border-b-2 m-1 p-1 border-gray-200 hover:border-2 " key={mail._id} >
          <NavLink>
             <div className="flex items-center hover:border-b-gray-300" onClick={(e)=>handleMessage(e,mail)}>
-                <span className={`w-2 h-2 rounded-full ${mail.read ? `bg-blue-400` : `bg-gray-200` } `}></span>
+                <span className={`w-2 h-2 rounded-full ${!mail.read ? `bg-blue-400` : `bg-gray-200` } `}></span>
                <div className=" ml-2 font-medium">{mail.sender.split('@')[0]}</div>
                <div className=" ml-16 font-medium">{mail.subject}</div>
                <div className="ml-8">{mail.text}</div>
             </div>
          </NavLink>
                <div className="flex justify-end">
-               <div className=" mr-24 w-4  h-4 "><button onClick={(e) => deleteMail(e,mail._id)}><img src={'https://cdn-icons-png.flaticon.com/128/2907/2907762.png'} alt='delete' /></button></div>
+               <div className=" mr-24 w-4  h-4 "><button onClick={(e) => handleDelete(e,mail._id)}><img src={'https://cdn-icons-png.flaticon.com/128/2907/2907762.png'} alt='delete' /></button></div>
               </div>
                </div>
             )
@@ -163,7 +155,7 @@ const MailBox = () =>{
             </div>
          </NavLink>
                <div className="flex items-center justify-end ">
-               <div className="mr-24 w-4  h-4 "><button onClick={(e) => deleteMail(e,mail._id)}><img src={'https://cdn-icons-png.flaticon.com/128/2907/2907762.png'} alt='delete' /></button></div>
+               <div className="mr-24 w-4  h-4 "><button onClick={(e) => handleDelete(e,mail._id)}><img src={'https://cdn-icons-png.flaticon.com/128/2907/2907762.png'} alt='delete' /></button></div>
               </div>
                </div>
             )

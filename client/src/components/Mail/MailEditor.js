@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { useNavigate } from 'react-router-dom';
 
 const MailEditor = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -12,17 +13,11 @@ const MailEditor = () => {
 
   const URL = 'http://localhost:3007'
   const token = JSON.parse(localStorage.getItem('token'))
+  const navigate = useNavigate();
   const handleSend = async (e) => {
     e.preventDefault();
     const content = convertToRaw(editorState.getCurrentContent());
- 
-    console.log('Subject:', subject);
-    console.log('Recipient:', recipient);
-    console.log('Content:', content.blocks[0].text); 
-    console.log('Attachment:', attachment);
-    
-    // Reset editor, subject, recipient, and attachment fields
-    let bodyInfo = JSON.stringify({recipient,subject,text:content.blocks[0].text})
+    let bodyInfo = JSON.stringify({recipient,subject,text:content.blocks[0].text,read:false})
     if(recipient){
         try{
           let response = await fetch(`${URL}/mail/send`,{
@@ -33,11 +28,10 @@ const MailEditor = () => {
                 'Authorization':`Bearer ${token}`
             }
           })
-          console.log('res2',response)
-          let data = await response.json()
-          console.log('data',data)
+           if(response.ok)
+           navigate('/mail-box')
         }catch(err){
-
+           alert('something wrong with editor')
         }
     }
     setEditorState(EditorState.createEmpty());
