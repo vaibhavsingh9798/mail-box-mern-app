@@ -1,10 +1,22 @@
 
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import {logout} from "../../features/authentication/authSlice"
 const HomeNavbar = () =>{
 
    const navigate = useNavigate()
-   const isLogin = true
+   const dispatch = useDispatch()
+   const isLogin = useSelector((state) => state.auth.isAuthenticated)
+
+   const handleClick = (e) =>{
+    e.preventDefault();
+     if(isLogin){
+        dispatch(logout())
+        navigate('/login')
+     }else{
+        navigate('/login')
+     }
+   }
 
     return(
         <div class="bg-gradient-to-r from-red-500 to-yellow-700 p-4"> 
@@ -17,7 +29,7 @@ const HomeNavbar = () =>{
         </div>
 
         <div class="mr-9">
-          <NavLink to='/login'><button>Login</button></NavLink>
+        <button onClick={handleClick}>{isLogin ?'Logout' : 'Login'}</button>
         </div>
     </div>
 

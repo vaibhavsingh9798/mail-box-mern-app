@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import {login} from '../../features/authentication/authSlice'
+import { useDispatch } from "react-redux";
 
 const Login = () =>{
 const [user,setUser] = useState({email:'',password:''})
 const [error,setError] = useState('')
 const URL = 'http://localhost:3007'
 const navigate = useNavigate()
+const dispatch = useDispatch()
 const handleChange = (e) =>{
     setError('')
     setUser({...user,[e.target.name]:e.target.value})
@@ -25,7 +28,8 @@ const handleSubmit = async (e) =>{
             let data = await response.json()
 
          if(response.ok){
-            localStorage.setItem('token',JSON.stringify(data.token))
+          let token = JSON.stringify(data.token)
+            dispatch(login({token}))
             alert(data.message)
             navigate('/')
          }else

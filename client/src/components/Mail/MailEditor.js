@@ -3,6 +3,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw } from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const MailEditor = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -12,7 +13,8 @@ const MailEditor = () => {
   const [error,setError] = useState('')
 
   const URL = 'http://localhost:3007'
-  const token = JSON.parse(localStorage.getItem('token'))
+
+  const token = JSON.parse(useSelector((state) => state.auth.token))
   const navigate = useNavigate();
   const handleSend = async (e) => {
     e.preventDefault();

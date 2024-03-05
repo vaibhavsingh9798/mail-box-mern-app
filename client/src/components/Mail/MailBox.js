@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useDeleteMail from "../../hooks/useDeleteMail"
+import { useSelector } from "react-redux";
 
 const MailBox = () =>{
   const [mails,setMails] = useState([])
@@ -15,8 +16,8 @@ const MailBox = () =>{
 
   const URL = 'http://localhost:3007'
  
-  const token = JSON.parse(localStorage.getItem('token'))
-
+  const token = JSON.parse(useSelector((state) => state.auth.token))
+ 
   const handleInbox = (e) =>{
      e.preventDefault();
      setShowMessage(false);
@@ -56,12 +57,13 @@ const MailBox = () =>{
   const handleDelete = async (e,mailId)=>{
     e.preventDefault();
      await deleteMail(URL,token,mailId)
-       handleSent(e);
+      //  handleSent(e);
+       fetchMail();
   }
 
-  const handleSent = async (e) =>{
+  const handleSent = async (e,refresh) =>{
      e.preventDefault();
-     setShowSent(!showSent)
+     setShowSent(true)
      try{
        let response = await fetch(`${URL}/mail/sentbox`,{ 
         headers:{
@@ -69,12 +71,10 @@ const MailBox = () =>{
           'Authorization':`Bearer ${token}`
       }
        })
-       console.log('sent res',response)
        if(response.ok)
        {
         let {data} =  await response.json()
-        console.log('data',data)
-        setSents(data)
+        setSents(data.reverse())
        }
      }catch(err){
       alert('something wrong with sent')
@@ -101,7 +101,7 @@ const MailBox = () =>{
           setUnreadMessage(99 +'+')
         else
         setUnreadMessage(count)
-        setMails(data)
+        setMails(data.reverse())
         }
        
      }catch(err){
